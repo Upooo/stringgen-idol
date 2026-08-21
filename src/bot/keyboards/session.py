@@ -1,6 +1,10 @@
 """Keyboards related to session generation flow."""
 
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import (
+    CopyTextButton,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+)
 
 
 def main_menu_keyboard() -> InlineKeyboardMarkup:
@@ -54,9 +58,17 @@ def cancel_keyboard() -> InlineKeyboardMarkup:
     )
 
 
-def success_keyboard() -> InlineKeyboardMarkup:
+def success_keyboard(session_string: str) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="📋 Copy Session",
+                    copy_text=CopyTextButton(
+                        text=session_string,
+                    ),
+                )
+            ],
             [
                 InlineKeyboardButton(
                     text="🗑 Delete Message",
