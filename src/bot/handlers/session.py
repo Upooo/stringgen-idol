@@ -279,7 +279,7 @@ async def _handle_password(message: Message, user_id: int, password: str) -> Non
 
 
 async def _deliver_session(message: Message, user_id: int) -> None:
-    """Generate session string, send it with warning, then cleanup."""
+    """Generate session string, provide copy button, then cleanup."""
     try:
         session_str = await session_service.get_session_string(user_id)
     except Exception:
