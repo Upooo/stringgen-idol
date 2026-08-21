@@ -295,15 +295,16 @@ async def _deliver_session(message: Message, user_id: int) -> None:
     text = (
         "✅ <b>Session Generated</b>\n\n"
         "Your session has been generated successfully.\n\n"
-        f"<code>{session_str}</code>\n\n"
+        "📋 Use the button below to copy your session.\n\n"
         "⚠️ <b>SECURITY WARNING</b>\n"
         "This session is highly sensitive.\n"
         "Anyone who obtains it may be able to access your Telegram account.\n\n"
         "Never share it publicly."
     )
+
     await message.answer(
         text,
-        reply_markup=success_keyboard(),
+        reply_markup=success_keyboard(session_str),
         parse_mode="HTML",
     )
 
