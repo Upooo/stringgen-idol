@@ -41,3 +41,17 @@ def framework_keyboard() -> InlineKeyboardMarkup:
             ],
         ]
     )
+
+
+def cancel_keyboard() -> InlineKeyboardMarkup:
+    """Keyboard with Cancel button during login flow."""
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="❌ Cancel",
+                    callback_data="cancel_generation",
+                )
+            ]
+        ]
+    )
