@@ -6,10 +6,10 @@
 
 ## Supported Frameworks (V1)
 
-| Framework     | Status            |
-|---------------|-------------------|
-| Telethon      | Planned (Phase 3) |
-| Pyrogram v2   | Planned (Phase 4) |
+| Framework     | Status  |
+|---------------|---------|
+| Telethon      | ✅ Ready |
+| Pyrogram v2   | ✅ Ready |
 
 **Not included in V1:**
 - GramJS
@@ -23,50 +23,30 @@
 - REST API / web dashboard
 - AI features
 
-## Architecture (high level)
-Telegram Bot (aiogram 3)
-│
-▼
-Handlers + Keyboards
-│
-▼
-Session Service (in-memory state)
-│
-▼
-Framework Generators
-├── TelethonSessionGenerator
-└── PyrogramSessionGenerator
-text- **Async-first** using `aiogram` 3.x, Telethon, and Pyrogram 2.x.
-- Configuration via `pydantic-settings` and environment variables.
-- Per-user in-memory state with timeout and cleanup (Phase 2+).
-- Strict security rules around credentials, OTP, 2FA, and session strings.
+## Features
+
+- Choose Telethon or Pyrogram v2
+- Phone number login → OTP → 2FA (if enabled)
+- Generate and return session string
+- In-memory per-user state with timeout
+- `/cancel` command + Cancel button
+- One active generation process per user
+- Automatic cleanup after success / cancel / error / timeout
+- Clear security warning after session is generated
+
+## Architecture
+
+Telegram Bot (aiogram 3) │ ▼ Handlers + Keyboards │ ▼ Session Service (in-memory state) │ ▼ Framework Generators ├── TelethonSessionGenerator └── PyrogramSessionGenerator
+
+text
 
 ## Project Structure
-stringgen-idol/
-├── src/
-│   ├── init.py
-│   ├── main.py
-│   ├── config.py
-│   ├── bot/
-│   │   ├── handlers/
-│   │   │   ├── start.py
-│   │   │   └── session.py
-│   │   └── keyboards/
-│   │       └── session.py
-│   ├── generators/
-│   │   ├── base.py
-│   │   ├── telethon.py
-│   │   └── pyrogram.py
-│   └── services/
-│       └── session_service.py
-├── tests/
-│   ├── test_config.py
-│   └── test_generators.py
-├── .env.example
-├── .gitignore
-├── pyproject.toml
-└── README.md
-text## Installation
+
+stringgen-idol/ ├── src/ │   ├── main.py │   ├── config.py │   ├── bot/ │   │   ├── handlers/ │   │   │   ├── start.py │   │   │   └── session.py │   │   └── keyboards/ │   │       └── session.py │   ├── generators/ │   │   ├── base.py │   │   ├── telethon.py │   │   └── pyrogram.py │   └── services/ │       ├── state.py │       └── session_service.py ├── tests/ ├── .env.example ├── .gitignore ├── pyproject.toml └── README.md
+
+text
+
+## Installation
 
 Requires **Python 3.10+**.
 
@@ -76,78 +56,113 @@ cd stringgen-idol
 python3.10 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
+
 Configuration
-Bashcp .env.example .env
-Fill in:
-envBOT_TOKEN=
+
+Bash
+
+cp .env.example .env
+
+Fill in .env:
+
+env
+
+BOT_TOKEN=your_bot_token
+
 ENVIRONMENT=development
 LOG_LEVEL=INFO
-TELETHON_API_ID=
-TELETHON_API_HASH=
-PYROGRAM_API_ID=
-PYROGRAM_API_HASH=
 
-Never commit .env or any real credentials.
-API ID / Hash from https://my.telegram.org
+TELETHON_API_ID=12345
+TELETHON_API_HASH=your_telethon_api_hash
 
-Running Locally
-Bashpython -m src.main
+PYROGRAM_API_ID=12345
+PYROGRAM_API_HASH=your_pyrogram_api_hash
+
+
+
+
+
+Get API ID / Hash from https://my.telegram.org
+
+
+
+Never commit .env or real credentials
+
+Running
+
+Bash
+
+python -m src.main
+
+Send /start to your bot.
+
 Testing
-Bashpytest
-Security Considerations
 
-Never log session strings, OTP, 2FA passwords, API hashes, or bot tokens.
-Never store session strings permanently.
-Temporary state is in-memory, keyed by Telegram user ID, with timeout + cleanup.
-State isolation between users.
-Clear security warning after session generation.
+Bash
 
-Current V1 Scope
+pytest
+
+Security
 
 
 
 
 
+Session strings, OTP, 2FA passwords, API hashes, and bot token are never logged
+
+
+
+No permanent storage of sessions
+
+
+
+Temporary state is in-memory only, keyed by Telegram user ID
+
+
+
+Automatic cleanup on success, cancel, error, and timeout
+
+
+
+Users receive a clear security warning after generation
+
+User Flow
 
 
 
 
 
+/start
 
 
 
+Tap Generate String Session
 
 
 
+Choose Telethon or Pyrogram v2
 
 
 
+Send phone number (+62...)
 
 
 
+Enter OTP
 
 
 
+Enter 2FA password (if enabled)
 
 
 
+Receive session string + security warning
 
 
 
+Optionally delete the message
 
+V1 Scope Status
 
+PhaseDescriptionStatus1Foundation✅ Done2Session state manager✅ Done3Telethon generator✅ Done4Pyrogram v2 generator✅ Done5Security review✅ Done6Final testing✅ Done
 
-
-
-
-
-
-
-PhaseDescriptionStatus1Foundation✅ Done2Session state managerPending3Telethon generatorPending4Pyrogram v2 generatorPending5Security reviewPending6Final testingPending
-Future Possibilities (out of V1 scope)
-
-GramJS support
-Persistent storage (if needed)
-Rate limiting improvements
-Multi-language UI
-Deployment helpers
