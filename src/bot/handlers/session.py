@@ -291,7 +291,7 @@ async def _deliver_session(message: Message, user_id: int) -> None:
         )
         return
 
-    # Deliver session (never log it)
+    # Deliver session through Telegram's native copy button (never log it)
     text = (
         "✅ <b>Session Generated</b>\n\n"
         "Your session has been generated successfully.\n\n"
