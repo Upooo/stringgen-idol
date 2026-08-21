@@ -33,7 +33,7 @@ class TestLoginState:
         state = LoginState(user_id=1, framework="telethon")
         old_exp = state.expires_at
         time.sleep(0.01)
-        state.touch(ttl=DEFAULT_STATE_TTL_SECONDS + 100)  # longer than default
+        state.touch(ttl=DEFAULT_STATE_TTL_SECONDS + 100)
         assert state.expires_at > old_exp
 
 
@@ -73,7 +73,7 @@ class TestStateManager:
 
     def test_expired_state_is_cleaned_on_get(self) -> None:
         state = self.mgr.create(user_id=1, framework="telethon", ttl=1)
-        state.expires_at = time.time() - 1  # force expire
+        state.expires_at = time.time() - 1
         assert self.mgr.get(1) is None
         assert 1 not in self.mgr._states
 
@@ -104,7 +104,6 @@ class TestStateManager:
 
 class TestSessionService:
     def setup_method(self) -> None:
-        # Use a fresh StateManager for isolation
         self.svc = SessionService()
         self.svc._state_manager = StateManager()
 
@@ -125,13 +124,14 @@ class TestSessionService:
     @pytest.mark.asyncio
     async def test_cancel_generation(self) -> None:
         self.svc.start_generation(10, "telethon")
+        # Attach a mock generator as client
         mock_client = AsyncMock()
-        self.svc.set_client(10, mock_client)
+        self.svc._state_manager.update(10, client=mock_client)
 
         cancelled = await self.svc.cancel_generation(10)
         assert cancelled is True
         assert self.svc.get_state(10) is None
-        mock_client.disconnect.assert_awaited_once()
+        mock_client.cleanup.assert_awaited_once()
 
     @pytest.mark.asyncio
     async def test_cancel_when_none(self) -> None:

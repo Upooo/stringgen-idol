@@ -4,7 +4,6 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
 def main_menu_keyboard() -> InlineKeyboardMarkup:
-    """Main menu with Generate String Session button."""
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -18,7 +17,6 @@ def main_menu_keyboard() -> InlineKeyboardMarkup:
 
 
 def framework_keyboard() -> InlineKeyboardMarkup:
-    """Framework selection keyboard."""
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -44,7 +42,6 @@ def framework_keyboard() -> InlineKeyboardMarkup:
 
 
 def cancel_keyboard() -> InlineKeyboardMarkup:
-    """Keyboard with Cancel button during login flow."""
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -53,5 +50,30 @@ def cancel_keyboard() -> InlineKeyboardMarkup:
                     callback_data="cancel_generation",
                 )
             ]
+        ]
+    )
+
+
+def success_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="🗑 Delete Message",
+                    callback_data="delete_message",
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="🔄 Generate Another",
+                    callback_data="generate_session",
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="🏠 Main Menu",
+                    callback_data="main_menu",
+                )
+            ],
         ]
     )
