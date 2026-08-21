@@ -279,7 +279,7 @@ async def _handle_password(message: Message, user_id: int, password: str) -> Non
 
 
 async def _deliver_session(message: Message, user_id: int) -> None:
-    """Generate session string, provide copy button, then cleanup."""
+    """Generate session string, send it with warning, then cleanup."""
     try:
         session_str = await session_service.get_session_string(user_id)
     except Exception:
@@ -295,16 +295,15 @@ async def _deliver_session(message: Message, user_id: int) -> None:
     text = (
         "✅ <b>Session Generated</b>\n\n"
         "Your session has been generated successfully.\n\n"
-        "📋 Use the button below to copy your session.\n\n"
+        f"<code>{session_str}</code>\n\n"
         "⚠️ <b>SECURITY WARNING</b>\n"
         "This session is highly sensitive.\n"
         "Anyone who obtains it may be able to access your Telegram account.\n\n"
         "Never share it publicly."
     )
-
     await message.answer(
         text,
-        reply_markup=success_keyboard(session_str),
+        reply_markup=success_keyboard(),
         parse_mode="HTML",
     )
 
